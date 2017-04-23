@@ -10,13 +10,15 @@ canvas.height = window.innerHeight * 0.8;
 /* define ball size and movement*/
 var ballRadius = 10;
 var x = canvas.width/2;
-var y = canvas.height-30;
-var dx = 2;
-var dy = -2;
+var y = canvas.height/2;
+var startingDx = 4; 
+var startingDy = -4;
+var dx = startingDx;
+var dy = startingDy;
 
 /* define paddle parameters*/
 var paddleHeight = 10;
-var paddleWidth = 75;
+var paddleWidth = canvas.width/12;
 var paddleOffsetY = 10;
 var paddleX = (canvas.width-paddleWidth)/2;
 
@@ -47,6 +49,7 @@ var lives = 3;
 /* define and initialize button press variables */
 var rightPressed = false;
 var leftPressed = false;
+var spacePressed = false;
 
 /* add event listeners*/
 document.addEventListener("keydown", keyDownHandler, false);
@@ -61,7 +64,7 @@ function mouseMoveHandler(e) {
     }
 } 
 
-/* detect if right or lect keys are pressed */
+/* detect if right or left keys are pressed */
 function keyDownHandler(e) {
     if(e.keyCode == 39) {
         rightPressed = true;
@@ -69,15 +72,21 @@ function keyDownHandler(e) {
     else if(e.keyCode == 37) {
         leftPressed = true;
     }
+    else if (e.keyCode == 32) {
+        spacePressed = true;
+    }
 }
 
-/* detect if right or lect keys are released */
+/* detect if right or left keys are released */
 function keyUpHandler(e) {
     if(e.keyCode == 39) {
         rightPressed = false;
     }
     else if(e.keyCode == 37) {
         leftPressed = false;
+    }
+    else if (e.keyCode == 32) {
+        spacePressed = false;
     }
 }
 
@@ -115,6 +124,14 @@ function drawLives() {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
     ctx.fillText("Lives: "+lives, canvas.width-65, 20);
+}
+
+/* draw the starting screen */
+function drawStartScreen() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = "22px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Press Space to Continue.", canvas.width/2, canvas.height/2);
 }
 
 /* draw the bricks */
@@ -182,13 +199,13 @@ function draw() {
 		lives--;
 		if(lives == 0) {
 			alert("GAME OVER");
-			document.loaction.reload()
+			document.location.reload()
 		}
 		else {
 			x = canvas.width/2;
-			y = canvas.height-30;
-			dx = 2;
-			dy = -2;
+			y = canvas.height/2;
+			dx = startingDx;
+			dy = startingDy;
 			paddleX = (canvas.width-paddleWidth)/2;
 		}
 	}
@@ -206,4 +223,5 @@ function draw() {
     requestAnimationFrame(draw);
 }
 
-draw();
+drawStartScreen();
+if (spacePressed = true) draw();
