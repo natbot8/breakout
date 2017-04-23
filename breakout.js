@@ -12,13 +12,13 @@ var ballRadius = 10;
 var x = canvas.width/2;
 var y = canvas.height/2;
 var startingDx = 4; 
-var startingDy = -4;
+var startingDy = 4;
 var dx = startingDx;
 var dy = startingDy;
 
 /* define paddle parameters*/
 var paddleHeight = 10;
-var paddleWidth = canvas.width/12;
+var paddleWidth = canvas.width/6;
 var paddleOffsetY = 10;
 var paddleX = (canvas.width-paddleWidth)/2;
 
@@ -104,8 +104,9 @@ function collisionDetection() {
                 	b.status--;
                 	score++;
                 	if(score == brickRowCount*brickColumnCount*brickStrength) {
-                        alert("YOU WIN, CONGRATULATIONS!");
-                        document.location.reload();
+                        break;
+                        // alert("YOU WIN, CONGRATULATIONS!");
+                        // document.location.reload();
                     }
             	}
         }
@@ -198,8 +199,9 @@ function draw() {
 	} else if (y + dy > canvas.height - ballRadius) {
 		lives--;
 		if(lives == 0) {
-			alert("GAME OVER");
-			document.location.reload()
+            break;
+			// alert("GAME OVER");
+			// document.location.reload()
 		}
 		else {
 			x = canvas.width/2;
