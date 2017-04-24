@@ -8,11 +8,14 @@ canvas.width = window.innerWidth * 0.8;
 canvas.height = window.innerHeight * 0.8;
 
 /* define ball size and movement*/
+function calculateDx() {
+    Math.floor(Math.random() * 4) + 1;
+} // not used
 var ballRadius = 10;
 var x = canvas.width/2;
 var y = canvas.height/2;
-var startingDx = 4; 
 var startingDy = 4;
+var startingDx = 4;
 var dx = startingDx;
 var dy = startingDy;
 
@@ -50,11 +53,14 @@ var lives = 3;
 var rightPressed = false;
 var leftPressed = false;
 var spacePressed = false;
+// var mousePressed = false; // not used
 
 /* add event listeners*/
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
+// document.addEventListener("mousedown", mouseDownHandler, false); // not used
+// document.addEventListener("mouseup", mouseUpHandler, false); // not used
 
 /* move the paddle with the mouse */
 function mouseMoveHandler(e) {
@@ -72,7 +78,7 @@ function keyDownHandler(e) {
     else if(e.keyCode == 37) {
         leftPressed = true;
     }
-    else if (e.keyCode == 32) {
+    else if (e.keyCode == 84) {
         spacePressed = true;
     }
 }
@@ -85,10 +91,11 @@ function keyUpHandler(e) {
     else if(e.keyCode == 37) {
         leftPressed = false;
     }
-    else if (e.keyCode == 32) {
+    else if (e.keyCode == 84) {
         spacePressed = false;
     }
 }
+
 
 /* detect if the ball is colliding with the bricks*/
 function collisionDetection() {
@@ -104,7 +111,7 @@ function collisionDetection() {
                 	b.status--;
                 	score++;
                 	if(score == brickRowCount*brickColumnCount*brickStrength) {
-                        break;
+                        // break;
                         // alert("YOU WIN, CONGRATULATIONS!");
                         // document.location.reload();
                     }
@@ -129,7 +136,6 @@ function drawLives() {
 
 /* draw the starting screen */
 function drawStartScreen() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.font = "22px Arial";
     ctx.fillStyle = "#0095DD";
     ctx.fillText("Press Space to Continue.", canvas.width/2, canvas.height/2);
@@ -191,15 +197,18 @@ function draw() {
     if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
     	dx = -dx;
 	}
-	if(y + dy < ballRadius || 
-		(y + dy > canvas.height - paddleOffsetY - ballRadius && 
-			x > paddleX && 
-			x < paddleX + paddleWidth)) {
-	    dy = -dy;
+	if(y + dy < ballRadius) {
+        dy = -dy;
+    } 
+	if(y + dy > canvas.height - paddleOffsetY - ballRadius && 
+        x > paddleX && 
+        x < paddleX + paddleWidth) {
+            dy = -dy;
+            dx = (Math.abs(x - (paddleX + (paddleWidth/2))) / (paddleWidth/2)) * dx;
 	} else if (y + dy > canvas.height - ballRadius) {
 		lives--;
 		if(lives == 0) {
-            break;
+            // break;
 			// alert("GAME OVER");
 			// document.location.reload()
 		}
@@ -225,5 +234,8 @@ function draw() {
     requestAnimationFrame(draw);
 }
 
-drawStartScreen();
-if (spacePressed = true) draw();
+// drawStartScreen();
+// if (spacePressed) {
+//     draw();
+// }
+draw();
