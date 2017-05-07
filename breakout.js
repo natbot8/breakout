@@ -105,8 +105,8 @@ function collisionDetection() {
             if(x > b.x && 
             	x < b.x+brickWidth && 
             	b.status >= 1) {
-                    if(y > b.y && 
-                        y < b.y+brickHeight) {
+                    if((y > b.y && y < b.y+ballRadius) ||
+                        (y < b.y+brickHeight && y > b.y+brickHeight-ballRadius)) {
                             dy = -dy;
                             b.status--;
                             score++;
@@ -194,9 +194,19 @@ function drawPaddle() {
 function paddleCollision() {
     dy = -dy;
     ballCenterX = x + (ballRadius/2);
-    paddleCenterX = paddleX + (paddleWidth/2);
-    //dist = (ballCenterX - paddleCenterX) / startingDx;
-    dx = dx*1.2;
+    //paddleCenterX = paddleX + (paddleWidth/2);
+    if (ballCenterX < paddleX + paddleWidth*(1/4)) {
+        dx = dx - 2;
+    }
+    if (ballCenterX < paddleX + paddleWidth*(2/4)) {
+        dx = dx - 1;
+    }
+    if (ballCenterX < paddleX + paddleWidth*(3/4)) {
+        dx = dx + 1;
+    }
+    if (ballCenterX < paddleX + paddleWidth*(4/4)) {
+        dx = dx + 2;
+    }
 }
 
 function draw() {
