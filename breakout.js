@@ -11,7 +11,7 @@ canvas.height = window.innerHeight * 0.8;
 function calculateDx() {
     Math.floor(Math.random() * 4) + 1;
 } // not used
-var ballRadius = 10;
+var ballRadius = Math.max(5, canvas.width*0.0075);
 var x = canvas.width/2;
 var y = canvas.height/2;
 var startingDy = 4;
@@ -104,12 +104,20 @@ function collisionDetection() {
             var b = bricks[c][r];
             if(x > b.x && 
             	x < b.x+brickWidth && 
-            	y > b.y && 
-            	y < b.y+brickHeight &&
             	b.status >= 1) {
-                	dy = -dy;
-                	b.status--;
-                	score++;
+                    if(y > b.y && 
+                        y < b.y+brickHeight) {
+                            dy = -dy;
+                            b.status--;
+                            score++;
+                    }
+                	if(y > b.y+ballRadius && 
+                        y < b.y+brickHeight-ballRadius) {
+                            dx = -dx;
+                            b.status--;
+                            score++;
+                    }
+                	
                 	if(score == brickRowCount*brickColumnCount*brickStrength) {
                         // break;
                         // alert("YOU WIN, CONGRATULATIONS!");
@@ -183,6 +191,14 @@ function drawPaddle() {
     ctx.closePath();
 }
 
+function paddleCollision() {
+    dy = -dy;
+    ballCenterX = x + (ballRadius/2);
+    paddleCenterX = paddleX + (paddleWidth/2);
+    //dist = (ballCenterX - paddleCenterX) / startingDx;
+    dx = dx*1.2;
+}
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBricks();
@@ -203,8 +219,7 @@ function draw() {
 	if(y + dy > canvas.height - paddleOffsetY - ballRadius && 
         x > paddleX && 
         x < paddleX + paddleWidth) {
-            dy = -dy;
-            dx = (Math.abs(x - (paddleX + (paddleWidth/2))) / (paddleWidth/2)) * dx;
+            paddleCollision();
 	} else if (y + dy > canvas.height - ballRadius) {
 		lives--;
 		if(lives == 0) {
